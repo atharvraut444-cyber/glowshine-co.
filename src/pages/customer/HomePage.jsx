@@ -1,129 +1,133 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight, ShieldCheck, Droplets, Leaf, Activity, Check } from 'lucide-react';
-import { productService } from '../../services/products/productService';
-import { useAuth } from '../../context/AuthContext';
+import {
+  ArrowRight,
+  Sparkles,
+  Droplets,
+  Leaf,
+  ShieldCheck,
+  Heart,
+  Star,
+  CheckCircle2,
+} from 'lucide-react';
 import { MOCK_PRODUCTS } from '../../data/mockProducts';
 import ProductCard from '../../components/customer/ProductCard';
-import { ProductCardSkeleton } from '../../components/common/Skeleton';
-import { Button } from '../../components/common/Button';
 
 export function HomePage() {
-  const { user, profile } = useAuth();
-  const [trendingProducts, setTrendingProducts] = useState(() =>
-    MOCK_PRODUCTS.filter((p) => p.isBestseller).slice(0, 4)
-  );
-  const [personalizedProducts, setPersonalizedProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const bestsellers = MOCK_PRODUCTS.filter((p) => p.isBestseller).slice(0, 5);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function loadData() {
-      const [trending, matches] = await Promise.all([
-        productService.getTrending(4, profile?.beautyProfile),
-        profile?.beautyProfile
-          ? productService.getPersonalizedMatches(profile.beautyProfile, 4)
-          : Promise.resolve([]),
-      ]);
-      if (isMounted) {
-        setTrendingProducts(trending);
-        if (matches.length > 0) {
-          setPersonalizedProducts(matches);
-        }
-        setLoading(false);
-      }
-    }
-    loadData();
-    return () => {
-      isMounted = false;
-    };
-  }, [profile?.beautyProfile]);
+  const categories = [
+    {
+      title: 'FACE',
+      subtitle: 'Healthy Skin. Lasting Glow.',
+      path: '/face',
+      image: '/sections/crops/face-hero-banner.jpg',
+      tag: '10 Formulations',
+      desc: 'Cleansers, Serums, Moisturizers, Masks & Sunscreen',
+    },
+    {
+      title: 'HAIR',
+      subtitle: 'Healthier Hair. Brighter Days.',
+      path: '/hair',
+      image: '/sections/crops/hair-hero-banner.jpg',
+      tag: '10 Formulations',
+      desc: 'Shampoo, Conditioner, Masks, Oils & Scalp Care',
+    },
+    {
+      title: 'BODY',
+      subtitle: 'Soft Skin. Lasting Confidence.',
+      path: '/body',
+      image: '/sections/crops/body-hero-banner.jpg',
+      tag: '10 Formulations',
+      desc: 'Shower Gel, Body Butter, Scrubs & Hand Care',
+    },
+    {
+      title: 'FRAGRANCE',
+      subtitle: 'Capture / Express / Inspire',
+      path: '/fragrance',
+      image: '/products/frag-001-rose-body-mist.jpg',
+      tag: 'Signature Scents',
+      desc: 'Eau de Parfum, Body Mists & Roll-On Extraits',
+    },
+    {
+      title: 'RITUALS & SETS',
+      subtitle: 'Small Steps. Big Glow.',
+      path: '/rituals',
+      image: '/products/rit-006-skincare-set.jpg',
+      tag: 'Curated Sets',
+      desc: 'Morning, Night, Self Care & Gift Collections',
+    },
+  ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pb-20">
-      {/* Editorial Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-ivory to-ivory border-b border-sand pt-12 sm:pt-20 pb-16 sm:pb-24">
+    <div className="bg-[#FAF8F5] min-h-screen text-ink space-y-20 pb-28">
+      {/* 1. Cinematic Luxury Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F3EC] via-[#FBF9F6] to-[#FAF8F5] border-b border-[#EBE7DF] pt-12 sm:pt-20 pb-16 sm:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Hero Narrative */}
+            {/* Left Narrative */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-pill bg-rose-light border border-rose-subtle text-rose-clay text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Behavioral Retail Intelligence</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#E2DDD3] text-stone-700 text-xs font-semibold uppercase tracking-wider shadow-2xs">
+                <span>✦ Luxury Botanical Formulation</span>
               </div>
 
-              <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-normal text-ink leading-[1.08] tracking-tight">
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-ink leading-[1.08] tracking-tight">
                 Beauty, <br />
-                <span className="italic font-normal">but personal.</span>
+                <span className="italic font-normal">made personal.</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-taupe max-w-xl leading-relaxed font-normal">
-                Intelligent botanical formulations designed to learn and synchronize with your skin’s changing moisture barrier and environmental stress.
+              <p className="text-base sm:text-lg text-stone-600 max-w-xl leading-relaxed font-normal">
+                Pure botanical formulations crafted with high-performance actives, synchronized with your skin’s natural rhythm for an enduring, healthy glow.
               </p>
 
               <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Link to="/shop">
-                  <Button variant="primary" size="lg" className="px-8 shadow-card">
-                    <span>Explore Formulations</span>
+                <Link to="/face">
+                  <button className="px-7 py-3 rounded-md bg-stone-900 hover:bg-stone-800 text-white text-xs sm:text-sm font-medium tracking-wide transition-all shadow-card flex items-center gap-2">
+                    <span>Explore Face Care</span>
                     <ArrowRight className="w-4 h-4" />
-                  </Button>
+                  </button>
                 </Link>
-
-                <Link to="/quiz">
-                  <Button variant="secondary" size="lg" className="border-sand hover:border-ink">
-                    <span>Take Skin Diagnostic</span>
-                    <Sparkles className="w-4 h-4 text-rose-clay" />
-                  </Button>
+                <Link to="/rituals">
+                  <button className="px-7 py-3 rounded-md border border-stone-800 text-stone-900 hover:bg-stone-900 hover:text-white text-xs sm:text-sm font-medium tracking-wide transition-all shadow-xs">
+                    <span>Discover Rituals</span>
+                  </button>
                 </Link>
               </div>
 
-              {/* Trust Indicators */}
-              <div className="pt-6 border-t border-sand/60 grid grid-cols-3 gap-4 max-w-lg text-xs text-taupe">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-rose-clay shrink-0" />
-                  <span>Exact-Amount UPI QR</span>
+              {/* Trust Badges Bar */}
+              <div className="pt-6 border-t border-[#EAE5DC] flex flex-wrap items-center gap-6 text-xs text-stone-600">
+                <div className="flex items-center gap-1.5">
+                  <Leaf className="w-4 h-4 text-stone-800" />
+                  <span>100% Pure Actives</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Droplets className="w-4 h-4 text-rose-clay shrink-0" />
-                  <span>Clinical Bio-Actives</span>
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-stone-800" />
+                  <span>Dermatologically Tested</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-rose-clay shrink-0" />
-                  <span>Adaptive Scoring</span>
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-stone-800" />
+                  <span>Clean Luxury</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Hero Imagery Grid */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto max-w-md">
-                <div className="surface-card rounded-2xl overflow-hidden p-2 shadow-elevated">
-                  <img
-                    src="/products/hero-formulation.jpg"
-                    alt="Ceramide Dew Barrier Repair Moisturizer"
-                    fetchpriority="high"
-                    decoding="async"
-                    width="448"
-                    height="560"
-                    className="w-full aspect-[4/5] object-cover rounded-xl"
-                  />
-                  <div className="p-4 bg-white/95 backdrop-blur-sm rounded-lg mt-2 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-taupe font-semibold">Featured Formulation</p>
-                      <h3 className="font-display text-base text-ink font-normal">Ceramide Dew Barrier Repair</h3>
-                    </div>
-                    <span className="text-sm font-semibold text-rose-clay">₹1,299</span>
+            {/* Right Hero Visual Feature */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative rounded-2xl overflow-hidden shadow-card border border-[#E5E0D8] bg-white group">
+                <img
+                  src="/sections/crops/face-hero-banner.jpg"
+                  alt="GlowShine Co. Signature Formulations"
+                  className="w-full h-auto object-cover group-hover:scale-102 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end p-6">
+                  <div className="text-white">
+                    <span className="text-[10px] tracking-widest uppercase font-semibold text-sand-light">
+                      Signature Release
+                    </span>
+                    <h3 className="font-serif text-xl sm:text-2xl mt-0.5">
+                      Healthy Skin. Lasting Glow.
+                    </h3>
                   </div>
-                </div>
-
-                {/* Floating GlowMatch Badge Card */}
-                <div className="absolute -bottom-5 -left-4 sm:-left-8 bg-white border border-sand shadow-modal rounded-card p-4 max-w-[220px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-[10px] uppercase tracking-widest font-semibold text-ink">GlowMatch™</p>
-                  </div>
-                  <p className="text-2xl font-bold text-ink">96%</p>
-                  <p className="text-[11px] text-taupe mt-0.5">High compatibility with barrier repair profile</p>
                 </div>
               </div>
             </div>
@@ -131,153 +135,159 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Personalized GlowMatch Section (if profile exists) */}
-      {profile?.beautyProfile && personalizedProducts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white border border-sand rounded-2xl p-6 sm:p-10 shadow-subtle space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div>
-                <div className="inline-flex items-center gap-1.5 text-xs text-rose-clay font-semibold uppercase tracking-wider mb-2">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Curated for {profile.name || user?.displayName || 'You'}</span>
-                </div>
-                <h2 className="font-display text-2xl sm:text-3xl text-ink font-normal">
-                  Your High-Affinity Formulations
-                </h2>
-                <p className="text-xs sm:text-sm text-taupe mt-1 max-w-xl">
-                  Ranked by compatibility with your <span className="text-ink font-medium">{profile.beautyProfile.skinType}</span> skin and <span className="text-ink font-medium">{profile.beautyProfile.primaryConcern?.replace('_', ' ')}</span> focus.
-                </p>
-              </div>
-              <Link to="/glowmatch" className="text-xs uppercase tracking-widest font-semibold text-ink hover:text-rose-clay flex items-center gap-1">
-                <span>View Full Match Breakdown</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              {personalizedProducts.map((product, idx) => (
-                <ProductCard key={product.id} product={product} priority={idx < 4} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Category Discovery Pills */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-xl mx-auto mb-8">
-          <span className="text-xs uppercase tracking-widest text-taupe font-semibold">Formulation Categories</span>
-          <h2 className="font-display text-2xl sm:text-3xl text-ink font-normal mt-1">
-            Targeted Botanical Architecture
+      {/* 2. The 5 Signature Worlds (Collections) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <span className="text-xs uppercase tracking-[0.25em] font-semibold text-stone-500">
+            EXPLORE THE WORLDS
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-ink">
+            Crafted for Every Ritual
           </h2>
+          <p className="text-sm text-stone-600">
+            Immerse yourself in our five signature categories tailored for holistic self-care.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {[
-            { label: 'Skincare', slug: 'skincare', count: '18 Products', icon: Droplets },
-            { label: 'Haircare', slug: 'haircare', count: '8 Products', icon: Leaf },
-            { label: 'Body Care', slug: 'bodycare', count: '6 Products', icon: Sparkles },
-            { label: 'Fragrance', slug: 'fragrance', count: '5 Products', icon: Activity },
-            { label: 'Clean Makeup', slug: 'makeup', count: '7 Products', icon: Sparkles },
-            { label: 'Sun Shield', slug: 'suncare', count: '4 Products', icon: ShieldCheck },
-          ].map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <Link
-                key={cat.slug}
-                to={`/shop?category=${cat.slug}`}
-                className="surface-card rounded-card p-4 flex flex-col items-center text-center group hover:border-ink transition-all"
-              >
-                <div className="w-10 h-10 rounded-full bg-ivory group-hover:bg-rose-light text-ink group-hover:text-rose-clay flex items-center justify-center transition-colors mb-2.5">
-                  <Icon className="w-5 h-5 stroke-1.5" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {categories.map((cat) => (
+            <Link
+              key={cat.title}
+              to={cat.path}
+              className="group relative bg-white border border-[#EAE5DC] rounded-xl overflow-hidden shadow-2xs hover:shadow-card transition-all duration-300 flex flex-col justify-between"
+            >
+              <div className="relative aspect-[4/3] sm:aspect-[1/1] overflow-hidden bg-[#F7F4EF]">
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-500"
+                />
+                <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-xs text-stone-800 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                  {cat.tag}
+                </span>
+              </div>
+              <div className="p-4 space-y-1.5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-serif text-base font-semibold text-ink group-hover:text-stone-700 transition-colors">
+                    {cat.title}
+                  </h3>
+                  <p className="text-xs text-stone-600 italic">
+                    {cat.subtitle}
+                  </p>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    {cat.desc}
+                  </p>
                 </div>
-                <h4 className="text-xs font-semibold text-ink group-hover:text-rose-clay transition-colors">{cat.label}</h4>
-                <p className="text-[11px] text-taupe mt-0.5">{cat.count}</p>
-              </Link>
-            );
-          })}
+                <div className="pt-2 flex items-center gap-1 text-xs font-semibold text-stone-900 group-hover:text-stone-700">
+                  <span>Explore {cat.title}</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* Trending Bestsellers Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+      {/* 3. Bestsellers Showcase */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <span className="text-xs uppercase tracking-widest text-taupe font-semibold">Most Desired</span>
-            <h2 className="font-display text-2xl sm:text-4xl text-ink font-normal mt-1">
-              Bestselling Formulations
+            <span className="text-xs uppercase tracking-[0.25em] font-semibold text-stone-500 block">
+              PATRON FAVORITES
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-ink mt-1">
+              Iconic Bestsellers
             </h2>
           </div>
           <Link
-            to="/shop"
-            className="text-xs uppercase tracking-widest font-semibold text-ink hover:text-rose-clay flex items-center gap-1"
+            to="/face"
+            className="text-xs uppercase tracking-widest font-semibold text-stone-800 hover:text-stone-600 inline-flex items-center gap-1.5"
           >
-            <span>View All ({trendingProducts.length > 0 ? '40+' : '...'})</span>
+            <span>View All Products</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {trendingProducts.map((product, idx) => (
-              <ProductCard key={product.id} product={product} priority={idx < 4} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Diagnostic Skin Quiz Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-2xl overflow-hidden bg-ink text-white p-8 sm:p-14 border border-sand/20">
-          <div className="max-w-2xl space-y-4">
-            <span className="text-xs uppercase tracking-widest text-rose-subtle font-semibold flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-rose-clay" />
-              <span>GlowShine Diagnostic</span>
-            </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-normal text-white leading-tight">
-              Unsure what your skin barrier requires?
-            </h2>
-            <p className="text-sand/80 text-sm leading-relaxed max-w-xl">
-              Answer 4 questions about your skin sensitivity, environment, and daily routine. Our rule-driven beauty intelligence matches you to precise ingredient profiles in seconds.
-            </p>
-            <div className="pt-4">
-              <Link to="/quiz">
-                <Button variant="accent" size="lg">
-                  <span>Start 2-Minute Diagnostic</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
+        {/* 5-Column Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 lg:gap-5">
+          {bestsellers.map((product, idx) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              priority={idx < 5}
+            />
+          ))}
         </div>
       </section>
 
-      {/* Clean Transparency Commitments (Aesop inspiration) */}
+      {/* 4. Editorial Ritual Showcase Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="border-t border-sand pt-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            <div className="space-y-2">
-              <h3 className="font-display text-lg text-ink font-normal">Barrier Biocompatible</h3>
-              <p className="text-xs text-taupe leading-relaxed">
-                Every formula is balanced between pH 4.8 and 5.5 to support your acid mantle and beneficial cutaneous microbiome without irritation.
+        <div className="relative rounded-2xl overflow-hidden border border-[#E5E0D8] bg-white shadow-card">
+          <Link to="/rituals">
+            <img
+              src="/sections/rituals-reference.jpg"
+              alt="GlowShine Co. Rituals and Sets"
+              className="w-full h-auto object-cover hover:opacity-98 transition-opacity"
+            />
+          </Link>
+        </div>
+      </section>
+
+      {/* 5. Fragrance Signature Showcase */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative rounded-2xl overflow-hidden border border-[#E5E0D8] bg-white shadow-card">
+          <Link to="/fragrance">
+            <img
+              src="/sections/fragrance-reference.jpg"
+              alt="GlowShine Co. Fragrance Collection"
+              className="w-full h-auto object-cover hover:opacity-98 transition-opacity"
+            />
+          </Link>
+        </div>
+      </section>
+
+      {/* 6. The GlowShine Standard */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="bg-[#F6F2EB] rounded-2xl border border-[#E6E1D7] p-8 sm:p-14">
+          <div className="max-w-2xl mx-auto text-center space-y-3 mb-10">
+            <span className="text-xs uppercase tracking-[0.25em] font-semibold text-stone-500">
+              OUR PROMISE
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-ink">
+              The GlowShine Standard
+            </h2>
+            <p className="text-sm text-stone-600">
+              Every formulation is meticulously balanced for potency, efficacy, and pure sensory joy.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+            <div className="space-y-2 p-4 bg-white/70 rounded-xl border border-sand/40">
+              <div className="text-2xl">🌿</div>
+              <h4 className="font-semibold text-sm text-ink">Active Botanicals</h4>
+              <p className="text-xs text-stone-600">
+                Cold-pressed plant lipids and bio-fermented actives with zero filler oils.
               </p>
             </div>
-            <div className="space-y-2">
-              <h3 className="font-display text-lg text-ink font-normal">Transparent Formulation</h3>
-              <p className="text-xs text-taupe leading-relaxed">
-                Full ingredient percentages declared for key bio-actives: 5 ceramides, pure Kashmiri saffron, copper peptides, and 10% niacinamide.
+            <div className="space-y-2 p-4 bg-white/70 rounded-xl border border-sand/40">
+              <div className="text-2xl">🔬</div>
+              <h4 className="font-semibold text-sm text-ink">Clinically Validated</h4>
+              <p className="text-xs text-stone-600">
+                Rigorous dermatological testing on diverse skin and hair barrier types.
               </p>
             </div>
-            <div className="space-y-2">
-              <h3 className="font-display text-lg text-ink font-normal">Rule-Driven Intelligence</h3>
-              <p className="text-xs text-taupe leading-relaxed">
-                Recommendations are computed purely from deterministic skin compatibility rules and your browsing behaviour. No opaque black-box models.
+            <div className="space-y-2 p-4 bg-white/70 rounded-xl border border-sand/40">
+              <div className="text-2xl">✨</div>
+              <h4 className="font-semibold text-sm text-ink">Sensory Perfection</h4>
+              <p className="text-xs text-stone-600">
+                Weightless textures and mood-elevating natural fragrance profiles.
+              </p>
+            </div>
+            <div className="space-y-2 p-4 bg-white/70 rounded-xl border border-sand/40">
+              <div className="text-2xl">♻️</div>
+              <h4 className="font-semibold text-sm text-ink">Sustainable Luxury</h4>
+              <p className="text-xs text-stone-600">
+                Recyclable flint glass, FSC-certified paper, and ethically harvested ingredients.
               </p>
             </div>
           </div>

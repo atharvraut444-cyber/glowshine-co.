@@ -118,7 +118,7 @@ export const productService = {
 
         // Skin Type filter
         if (skinType && skinType !== 'all') {
-          if (!product.skinTypes.includes('all') && !product.skinTypes.includes(skinType)) {
+          if (!product.skinTypes || (!product.skinTypes.includes('all') && !product.skinTypes.includes(skinType))) {
             return false;
           }
         }

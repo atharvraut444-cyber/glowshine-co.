@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Star, Plus } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { formatCurrency, getOptimizedImageUrl } from '../../utils/formatters';
-import { Badge } from '../common/Badge';
 
 export function ProductCard({ product, priority = false }) {
   const navigate = useNavigate();
@@ -32,105 +31,109 @@ export function ProductCard({ product, priority = false }) {
     toggleWishlist(product);
   };
 
+  // Render 5 stars matching visual reference
+  const ratingValue = product.rating || 4.8;
+  const reviewCountFormatted =
+    product.reviewCount >= 1000
+      ? `${(product.reviewCount / 1000).toFixed(1)}k`
+      : product.reviewCount || '980';
+
   return (
     <div
       onClick={handleCardClick}
-      className="group relative surface-card rounded-card overflow-hidden flex flex-col cursor-pointer transition-all duration-300"
+      className="group relative bg-white border border-[#EBE7DF] rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer transition-all duration-300 hover:shadow-card hover:border-[#D8D1C3]"
     >
-      {/* Top Badges & Wishlist Button */}
-      <div className="relative aspect-[4/5] bg-sand/20 overflow-hidden">
-        {/* Instant skeleton shimmer while image finishes loading */}
+      {/* Top Image Container */}
+      <div className="relative aspect-[1/1] sm:aspect-[1.05/1] bg-[#F7F4EF] overflow-hidden">
         {!loaded && (
           <div className="absolute inset-0 skeleton-shimmer bg-sand/40 z-0" />
         )}
 
         <img
-          src={getOptimizedImageUrl(imgSrc, 400, 75)}
+          src={getOptimizedImageUrl(imgSrc, 400, 80)}
           alt={product.name}
           loading={priority ? 'eager' : 'lazy'}
           fetchpriority={priority ? 'high' : 'auto'}
           decoding="async"
           width="280"
-          height="350"
+          height="280"
           onLoad={() => setLoaded(true)}
           onError={() => {
             if (product.fallbackImage && imgSrc !== product.fallbackImage) {
               setImgSrc(product.fallbackImage);
             }
           }}
-          className={`w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-300 ${
+          className={`w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ${
             loaded ? 'opacity-100' : 'opacity-0'
           }`}
         />
 
-        {/* Floating Badges */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10">
-          {product.glowMatchScore && (
-            <Badge score={product.glowMatchScore} />
-          )}
-          {product.isBestseller && (
-            <span className="text-[10px] font-semibold uppercase tracking-wider bg-ink text-white px-2 py-0.5 rounded-pill shadow-subtle">
-              Bestseller
-            </span>
-          )}
-          {product.isNew && !product.isBestseller && (
-            <span className="text-[10px] font-semibold uppercase tracking-wider bg-white/90 text-ink border border-sand px-2 py-0.5 rounded-pill shadow-subtle backdrop-blur-xs">
-              New
-            </span>
-          )}
-        </div>
-
-        {/* Wishlist Button */}
+        {/* Wishlist Heart Icon Top Right */}
         <button
           onClick={handleToggleWishlist}
           aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          className={`absolute top-2.5 right-2.5 p-2 rounded-full backdrop-blur-md transition-all duration-200 z-10 ${
-            isWishlisted
-              ? 'bg-rose-clay text-white shadow-subtle'
-              : 'bg-white/80 text-taupe hover:text-ink hover:bg-white shadow-subtle'
-          }`}
+          className="absolute top-2.5 right-2.5 p-1.5 rounded-full bg-white/80 hover:bg-white text-stone-500 hover:text-stone-900 backdrop-blur-xs transition-colors z-10 shadow-xs"
         >
-          <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-current' : ''}`} />
+          <Heart
+            className={`w-4 h-4 transition-colors ${
+              isWishlisted ? 'fill-rose-clay text-rose-clay' : 'text-stone-500'
+            }`}
+          />
         </button>
 
-        {/* Quick Add Overlay on Hover (Desktop) */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden sm:block z-10">
-          <button
-            onClick={handleAddToCart}
-            className="w-full py-2.5 bg-ink/90 hover:bg-ink text-white text-xs font-medium rounded-subtle shadow-card flex items-center justify-center gap-1.5 backdrop-blur-sm transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Quick Add</span>
-          </button>
-        </div>
+        {/* Bestseller Badge */}
+        {product.isBestseller && (
+          <span className="absolute top-2.5 left-2.5 text-[9px] font-semibold uppercase tracking-wider bg-stone-900/90 text-white px-2 py-0.5 rounded-pill z-10">
+            Bestseller
+          </span>
+        )}
       </div>
 
-      {/* Content Area */}
-      <div className="p-4 flex flex-col flex-1 justify-between bg-white">
+      {/* Card Info Content */}
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between bg-white">
         <div>
-          <div className="flex items-center justify-between text-[11px] text-taupe mb-1">
-            <span className="uppercase tracking-widest font-semibold">{product.brand}</span>
-            {product.rating && (
-              <span className="flex items-center gap-0.5 font-medium text-ink">
-                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span>{product.rating}</span>
-                <span className="text-taupe text-[10px]">({product.reviewCount || 0})</span>
-              </span>
-            )}
-          </div>
+          {/* Subcategory Label */}
+          <span className="block text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-taupe mb-1">
+            {product.subCategory || product.category}
+          </span>
 
-          <h3 className="font-sans text-sm font-medium text-ink line-clamp-2 leading-snug group-hover:text-rose-clay transition-colors">
+          {/* Product Title */}
+          <h3 className="font-sans text-sm font-semibold text-ink line-clamp-1 group-hover:text-rose-clay transition-colors">
             {product.name}
           </h3>
 
-          {product.volume && (
-            <p className="text-[11px] text-taupe mt-1">{product.volume}</p>
-          )}
+          {/* Short Formulation Description */}
+          <p className="text-[11px] sm:text-xs text-taupe/90 line-clamp-2 mt-1 leading-relaxed">
+            {product.description}
+          </p>
+
+          {/* Star Rating Row */}
+          <div className="flex items-center gap-1.5 mt-2.5">
+            <div className="flex text-amber-500">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-3 h-3 ${
+                    i < Math.floor(ratingValue)
+                      ? 'fill-amber-400 text-amber-400'
+                      : 'text-stone-300'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-[11px] font-semibold text-ink">
+              {ratingValue}
+            </span>
+            <span className="text-[11px] text-taupe">
+              ({reviewCountFormatted})
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-sand/40">
+        {/* Bottom Row: Price & Add to Cart Button */}
+        <div className="flex items-center justify-between mt-3.5 pt-3 border-t border-sand/40">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-sm font-semibold text-ink">
+            <span className="text-sm sm:text-base font-bold text-ink">
               {formatCurrency(product.price)}
             </span>
             {product.originalPrice && product.originalPrice > product.price && (
@@ -140,13 +143,11 @@ export function ProductCard({ product, priority = false }) {
             )}
           </div>
 
-          {/* Mobile Quick Add Icon */}
           <button
             onClick={handleAddToCart}
-            className="sm:hidden p-1.5 rounded-full bg-sand-light text-ink hover:bg-ink hover:text-white transition-colors"
-            aria-label="Add to bag"
+            className="px-3.5 py-1.5 bg-[#7D6B5D] hover:bg-[#68584B] active:scale-95 text-white text-xs font-medium rounded-md transition-all shadow-xs"
           >
-            <Plus className="w-4 h-4" />
+            Add to Cart
           </button>
         </div>
       </div>

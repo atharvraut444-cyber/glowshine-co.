@@ -12,6 +12,12 @@ import AdminRoute from './components/auth/AdminRoute';
 
 // Customer Pages (Lazy loaded for optimal initial bundle & paint)
 const HomePage = lazy(() => import('./pages/customer/HomePage'));
+const FacePage = lazy(() => import('./pages/customer/FacePage'));
+const HairPage = lazy(() => import('./pages/customer/HairPage'));
+const BodyPage = lazy(() => import('./pages/customer/BodyPage'));
+const FragrancePage = lazy(() => import('./pages/customer/FragrancePage'));
+const RitualsPage = lazy(() => import('./pages/customer/RitualsPage'));
+
 const ShopPage = lazy(() => import('./pages/customer/ShopPage'));
 const ProductDetailPage = lazy(() => import('./pages/customer/ProductDetailPage'));
 const LoginPage = lazy(() => import('./pages/customer/LoginPage'));
@@ -55,8 +61,17 @@ export function App() {
               <Routes>
                 {/* Customer Facing Storefront Routes */}
                 <Route element={<CustomerLayout />}>
+                  {/* Home & The 5 Signature Sections */}
                   <Route path="/" element={<HomePage />} />
-                  <Route path="/shop" element={<ShopPage />} />
+                  <Route path="/face" element={<FacePage />} />
+                  <Route path="/hair" element={<HairPage />} />
+                  <Route path="/body" element={<BodyPage />} />
+                  <Route path="/fragrance" element={<FragrancePage />} />
+                  <Route path="/rituals" element={<RitualsPage />} />
+                  <Route path="/rituals-sets" element={<RitualsPage />} />
+
+                  {/* Fallback & Detail routes */}
+                  <Route path="/shop" element={<Navigate to="/face" replace />} />
                   <Route path="/product/:id" element={<ProductDetailPage />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
@@ -104,7 +119,7 @@ export function App() {
                   <Route path="settings" element={<AdminSettingsPage />} />
                 </Route>
 
-                {/* Fallback */}
+                {/* 404 Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>

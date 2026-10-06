@@ -37,6 +37,8 @@ export function ProductDetailPage() {
 
   useEffect(() => {
     async function loadProduct() {
+      const initial = MOCK_PRODUCTS.find((p) => p.id === id);
+      if (initial) setProduct(initial);
       const res = await productService.getProductById(id, profile?.beautyProfile);
       if (res.product) {
         setProduct(res.product);

@@ -72,11 +72,11 @@ export function Footer() {
           <div>
             <h5 className="font-semibold uppercase tracking-widest text-white mb-4">Discovery</h5>
             <ul className="space-y-2.5 text-sand/70">
-              <li><Link to="/shop?category=skincare" className="hover:text-white transition-colors">Barrier Skincare</Link></li>
-              <li><Link to="/shop?category=haircare" className="hover:text-white transition-colors">Scalp & Hair Tonics</Link></li>
-              <li><Link to="/shop?category=bodycare" className="hover:text-white transition-colors">Botanical Body Care</Link></li>
-              <li><Link to="/shop?category=fragrance" className="hover:text-white transition-colors">Artisanal Fragrance</Link></li>
-              <li><Link to="/shop?category=suncare" className="hover:text-white transition-colors">Invisible Sun Fluid</Link></li>
+              <li><Link to="/face" className="hover:text-white transition-colors">Face Formulations</Link></li>
+              <li><Link to="/hair" className="hover:text-white transition-colors">Hair & Scalp Care</Link></li>
+              <li><Link to="/body" className="hover:text-white transition-colors">Botanical Body Care</Link></li>
+              <li><Link to="/fragrance" className="hover:text-white transition-colors">Signature Fragrance</Link></li>
+              <li><Link to="/rituals" className="hover:text-white transition-colors">Rituals & Gift Sets</Link></li>
             </ul>
           </div>
 
